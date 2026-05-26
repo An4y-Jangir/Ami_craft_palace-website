@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import AnimatedLogo from './components/AnimatedLogo';
 import StackedCarousel from './components/StackedCarousel';
 import ProductDetails from './components/ProductDetails';
-import { 
-  Sparkles, 
-  Award, 
-  Shield, 
-  Heart, 
-  Eye, 
-  Volume2, 
-  VolumeX, 
-  MessageCircle, 
-  Mail, 
-  Phone, 
-  MapPin 
+import {
+  Sparkles,
+  Award,
+  Shield,
+  Heart,
+  Eye,
+  Volume2,
+  VolumeX,
+  Mail,
+  Phone,
+  MapPin
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,23 +21,22 @@ const PRODUCTS = [
     id: 'shubh-labh-hangings',
     title: "Shubh Labh Embroidered Hangings",
     badge: "Festive Collection",
-    price: "$45.00",
+    price: "₹500.00",
     image: "/images/shubh_labh_hangings.webp",
     description: "Traditional door hangings featuring Shubh Labh text plates, floral motifs, and pearl strings.",
     longDescription: "An auspicious set of two hanging door decorations featuring beautifully crafted 'Shubh' and 'Labh' plaques (representing auspiciousness and prosperity). Ornamented with soft white organza flower clusters, golden Gota Patti work, and layered faux pearl strands.",
     category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=indian+shubh+labh+hanging+toran",
+    amazonUrl: "https://amzn.in/d/0dSXpQzF",
     details: {
-      materials: "Organza, Gota Patti lace, MDF plaques, Faux pearls",
-      dimensions: "45cm Length x 12cm Width",
-      origin: "Rajasthan Artisan Guild, India"
+      materials: "Cardboard, Fabric, Metallic Foil, Net, Pearl Beads, Resin, Sequins",
+      dimensions: "2D x 8.5W x 25.5H Centimeters"
     }
   },
   {
     id: 'peacock-sticks',
     title: "Peacock Motif Decor Sticks",
     badge: "Heritage Accents",
-    price: "$25.00",
+    price: "₹199.00",
     image: "/images/peacock_sticks.webp",
     description: "Delicate decorative sticks adorned with hand-styled peacock feathers and gold details.",
     longDescription: "A pair of traditional decorative sticks designed with delicate miniature peacock feather eyes. Wrapped in golden threads and finished with vibrant orange felt backings, these sticks add an authentic, regal charm to vases or festive centerpieces.",
@@ -46,31 +44,29 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=traditional+indian+decor+sticks",
     details: {
       materials: "Gota thread, Felt, Peacock feathers, Rhinestones",
-      dimensions: "25cm Height x 8cm Diameter",
-      origin: "Vrindavan Craft Circle, India"
+      dimensions: "25cm Height x 8cm Diameter"
     }
   },
   {
     id: 'evil-eye-patch',
     title: "Evil Eye Beaded Patch",
     badge: "Protection Charm",
-    price: "$35.00",
+    price: "₹200.00",
     image: "/images/evil_eye_patch.webp",
     description: "Handmade blue and gold beaded evil eye wall emblem with sequin embroidery.",
     longDescription: "An intricately detailed evil eye protection amulet, hand-stitched with micro glass beads in royal blue, turquoise, and cream. Embellished with shimmering gold sequins and decorative leaf elements to protect your home with luxury styling.",
     category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=beaded+evil+eye+wall+decor",
+    amazonUrl: "https://amzn.in/d/0a7cx1c7",
     details: {
-      materials: "Glass micro beads, Sequins, Felt backing, Gold thread",
-      dimensions: "12cm x 10cm",
-      origin: "Mumbai Inlay Workshop, India"
+      materials: "Fabric Backing, Glass Beads, Metallic Thread, Sequins",
+      dimensions: "11.0L x 8.0W Centimeters"
     }
   },
   {
     id: 'evil-eye-toran',
     title: "Radha Krishna Door Bandhanwar",
     badge: "Royal Toran",
-    price: "$85.00",
+    price: "₹1800.00",
     image: "/images/evil_eye_toran.webp",
     description: "Premium door hanging featuring beaded evil eye borders, flowers, and a Radha Krishna centerpiece.",
     longDescription: "A premium, horizontal door hanging (Bandhanwar/Toran) featuring protective beaded evil eye medallions at both ends. Decorated with an array of pastel organza flowers, sequence borders, and a beautiful central Radha Krishna medallion. Fits standard doors.",
@@ -78,15 +74,14 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=indian+door+hanging+toran+bandhanwar",
     details: {
       materials: "Organza flowers, Glass beads, Sequence lace, Metal medallion",
-      dimensions: "90cm Length (fits standard door frames)",
-      origin: "Mathura Devotional Guild, India"
+      dimensions: "90cm Length (fits standard door frames)"
     }
   },
   {
     id: 'brocade-thali',
     title: "Brocade Decorative Puja Platter",
     badge: "Festive Dining",
-    price: "$65.00",
+    price: "₹399.00",
     image: "/images/brocade_thali.webp",
     description: "An elegant green brocade thali set with gold border trim, matching brass cups, and a cone.",
     longDescription: "A festive decorative platter (Thali) wrapped in luxurious dark green forest brocade with floral gold weave patterns. Styled with gold triangle Gota laces and matching pearl boundaries. Includes two small metal bowls and a Gota-wrapped cone.",
@@ -94,31 +89,29 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=decorated+brocade+puja+thali+plate",
     details: {
       materials: "Forest Green Brocade fabric, Gota laces, Brass, Faux pearls",
-      dimensions: "28cm Diameter",
-      origin: "Varanasi Silk Weaver Center, India"
+      dimensions: "28cm Diameter"
     }
   },
   {
     id: 'ganesha-toran',
     title: "Ganesha Medallion Door Toran",
     badge: "Royal Toran",
-    price: "$95.00",
+    price: "₹2100.00",
     image: "/images/ganesha_toran.webp",
     description: "Deluxe door hanging featuring a central Ganesha medallion, light purple roses, and beaded embellishments.",
     longDescription: "A magnificent horizontal door toran featuring a diamond-shaped Ganesha icon at the center. Accented with lush lavender roses, gold sequence borders, hanging metallic bells, and elegant mint-blue lotus corner patches.",
     category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=ganesha+door+toran+hanging",
+    amazonUrl: "https://amzn.in/d/07URixoK",
     details: {
-      materials: "Velvet bases, Sequins, Faux roses, Metal medallion",
-      dimensions: "92cm Length",
-      origin: "Jaipur Heritage Center, India"
+      materials: "Artificial Flowers, Beads, Embroidery Thread, Fabric, Metal, Sequins",
+      dimensions: "104 Length Centimetres"
     }
   },
   {
     id: 'swastik-lotus-hangings',
     title: "Lotus Swastik Wall Hangings",
     badge: "Protection Charm",
-    price: "$40.00",
+    price: "₹350.00",
     image: "/images/swastik_lotus_hangings.webp",
     description: "A pair of swastik protection symbols decorated with pink lotus illustrations and golden tassels.",
     longDescription: "An elegant pair of hanging Swastik medallions decorated with golden borders, pink lotus graphics, and soft silk tassels. Symbolizing protection and positivity, they look gorgeous hanging in entryways or temple rooms.",
@@ -126,63 +119,59 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=indian+swastik+hanging+lotus",
     details: {
       materials: "MDF base, Silk tassels, Gota borders, Rhinestones",
-      dimensions: "50cm Length x 10cm Width",
-      origin: "Vrindavan Craft Circle, India"
+      dimensions: "50cm Length x 10cm Width"
     }
   },
   {
     id: 'rose-shubh-labh',
     title: "Shubh Labh Rose Plaques",
     badge: "Festive Collection",
-    price: "$50.00",
+    price: "₹450.00",
     image: "/images/rose_shubh_labh.webp",
     description: "A set of Shubh Labh plaques adorned with large purple roses, gold rings, and hanging jhumkas.",
     longDescription: "A modern design of Shubh Labh hanging plaques featuring large, realistic light purple organza roses on gold tissue frames. Finished with traditional sequin-covered jhumka bells at the bottom.",
     category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=modern+shubh+labh+rose+hangings",
+    amazonUrl: "https://amzn.in/d/0gsdsxzI",
     details: {
-      materials: "Organza, Gota fabric, MDF base, Sequin jhumkas",
-      dimensions: "40cm Length x 14cm Width",
-      origin: "Mathura Devotional Guild, India"
+      materials: "Delicate Pearl Beadwork, Soft Pink Fabric Flowers, and Golden Sequinned Jhumki Bells",
+      dimensions: "2D x 8.5W x 25.5H Centimeters"
     }
   },
   {
     id: 'burlap-gift-pouch',
     title: "Gemstone Burlap Gift Pouch",
     badge: "Heritage Accents",
-    price: "$15.00",
+    price: "₹650.00",
     image: "/images/burlap_gift_pouch.webp",
     description: "Handmade rustic burlap bag featuring a central teardrop gemstone and pearl border.",
     longDescription: "A charming and rustic favor pouch crafted from natural jute burlap. Decorated with a central teardrop rhinestone framed by micro-pearl borders. Includes a gold drawstring closure, perfect for luxury gifting.",
     category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=decorated+burlap+gift+bag+pearls",
+    amazonUrl: "https://amzn.in/d/00FElpaE",
     details: {
-      materials: "Natural Jute Burlap, Teardrop rhinestone, Faux pearls",
-      dimensions: "15cm x 10cm",
-      origin: "Kolkata Jute Guild, India"
+      materials: "Cotton Drawstring, Jute, Pearl Beads, Rhinestone",
+      dimensions: "13L x 11W x 0.5H Centimeters"
     }
   },
   {
     id: 'krishna-pearl-frame',
     title: "Krishna Pearl Framed Icon",
     badge: "Heritage Accents",
-    price: "$75.00",
+    price: "₹250.00",
     image: "/images/krishna_pearl_frame.webp",
     description: "Gilded square desktop icon featuring a hand-painted Krishna face with double pearl borders.",
     longDescription: "A beautiful square decorative frame layered with dual rows of premium white faux pearls and set with circular rhinestones. Houses a hand-painted traditional portrait of Lord Krishna with a peacock feather crown.",
     category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=krishna+pearl+framed+painting+small",
+    amazonUrl: "https://amzn.in/d/0hwvSjaY",
     details: {
-      materials: "Brass base, Pearl beads, Painted resin, Rhinestones",
-      dimensions: "12cm x 12cm",
-      origin: "Nathdwara Artists Guild, India"
+      materials: "Wood, Metal with Pearl and Crystal Embilleshment, Golden Finish Frame",
+      dimensions: "8.5L x 8.8W Centimeters"
     }
   },
   {
     id: 'gift-box-ribbon',
     title: "Rose Ribbon Gift Box Decoration",
     badge: "Home Accents",
-    price: "$18.00",
+    price: "₹150.00",
     image: "/images/gift_box_ribbon.webp",
     description: "Clear gift container wrapped with a broad gold mesh ribbon and a realistic pink rose centerpiece.",
     longDescription: "An elegant gift presentation solution. Features a premium clear container wrapped in structured gold mesh ribbon, centered with a lifelike deep pink rose detail. Makes any gift look exceptionally premium.",
@@ -190,15 +179,14 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=gold+mesh+ribbon+gift+box+decoration",
     details: {
       materials: "Polypropylene, Gold mesh ribbon, Silk rose",
-      dimensions: "22cm x 15cm x 10cm",
-      origin: "Varanasi Silk Weaver Center, India"
+      dimensions: "22cm x 15cm x 10cm"
     }
   },
   {
     id: 'ganesha-gold-thali',
     title: "Ganesha Gold Decorative Platter",
     badge: "Home Accents",
-    price: "$55.00",
+    price: "₹299.00",
     image: "/images/ganesha_gold_thali.webp",
     description: "Golden net-texture thali with white pearl borders, a central Ganesha detail, and matching bowls.",
     longDescription: "A stunning golden platter wrapped in a fine mesh texture, finished with a classic border of faux white pearls. Includes a central Ganesha emblem, two small bowls for ritual ingredients, and white floral details.",
@@ -206,31 +194,29 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=ganesha+gold+puja+thali+plate",
     details: {
       materials: "Steel platter, Gold mesh, Faux pearls, Brass bowls",
-      dimensions: "26cm Diameter",
-      origin: "Jaipur Metal Guild, India"
+      dimensions: "26cm Diameter"
     }
   },
   {
     id: 'shimmer-platter-cover',
     title: "Shimmering Organza Platter Cover",
     badge: "Heritage Fabrics",
-    price: "$30.00",
+    price: "₹500.00",
     image: "/images/shimmer_platter_cover.webp",
     description: "Light blue shimmering organza cloth with gold fringes, perfect for wrapping presentation trays.",
     longDescription: "A luxurious light blue organza cover cloth with gold-threaded borders and fine metallic fringes. Perfect for covering shagun platters or offering gifts in a traditional, elegant manner.",
     category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=indian+platter+cover+cloth+zari",
+    amazonUrl: "https://amzn.in/d/0gIK4LIA",
     details: {
-      materials: "Organza fabric, Golden Zari thread, Metallic fringes",
-      dimensions: "60cm x 60cm",
-      origin: "Banaras Zari Guild, India"
+      materials: "Organza fabric, Golden Zari thread",
+      dimensions: "48L x 48W Centimeters"
     }
   },
   {
     id: 'flower-lumba-rakhi',
     title: "Aura Rose Flower Lumba Rakhi",
     badge: "Lumba Collection",
-    price: "$28.00",
+    price: "₹350.00",
     image: "/images/flower_lumba_rakhi.webp",
     description: "An exquisite pink rose flower Lumba Rakhi with golden beads, micro-pearl details, and matching pom-poms.",
     longDescription: "A beautifully styled handcrafted Lumba Rakhi designed specifically for sisters-in-law. Adorned with a large, delicate pink fabric rose, micro-pearl accents, hanging pom-poms with criss-cross golden ribbons, and a matching peacock motif thread.",
@@ -238,15 +224,14 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=lumba+rakhi+for+bhabhi",
     details: {
       materials: "Organza flower, Golden beads, Pom-poms, Satin ribbons, Peacock motif charm",
-      dimensions: "32cm Total Length",
-      origin: "Kolkata Craft House, India"
+      dimensions: "32cm Total Length"
     }
   },
   {
     id: 'gota-tassel-rakhi',
     title: "Exquisite Pearl & Crystal Gota Tassel Set",
     badge: "Artisan Set",
-    price: "$32.00",
+    price: "₹550.00",
     image: "/images/gota_tassel_rakhi.webp",
     description: "Exquisite handcrafted set featuring a gold flower thread and a stunning sequined bell tassel hanging.",
     longDescription: "A premium handcrafted artisan set of two: a delicate wrist tie adorned with a crystal flower centerpiece, paired with a matching hanging tassel ornament. Crafted with shimmering gold Gota, sequins, and multiple hanging strands of tiny gold beads and white pearls.",
@@ -254,15 +239,14 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=gota+tassel+rakhi+set",
     details: {
       materials: "Gota Patti ribbon, Sequins, Glass crystal beads, Faux pearls",
-      dimensions: "Tassel: 15cm Length; Wrist Tie: 35cm Length",
-      origin: "Jaipur Artisan Guild, India"
+      dimensions: "Tassel: 15cm Length; Wrist Tie: 35cm Length"
     }
   },
   {
     id: 'heart-pendant-rakhi',
     title: "Enameled Heart Pendant Rakhi",
     badge: "Modern Festive",
-    price: "$20.00",
+    price: "₹150.00",
     image: "/images/heart_pendant_rakhi.webp",
     description: "A modern design featuring a pink-enameled layered heart pendant on a gold link chain and pink thread.",
     longDescription: "A contemporary fusion design. Features a beautiful, high-gloss enameled heart pendant with concentric pink, white, and red layers, suspended from a gold-plated link chain. Finished with soft pink braided threads and small pearl accent beads, combining modern charm with festive tradition.",
@@ -270,8 +254,22 @@ const PRODUCTS = [
     amazonUrl: "https://www.amazon.com/s?k=heart+pendant+rakhi+bracelet",
     details: {
       materials: "Enameled brass pendant, Gold-plated chain, Cotton threads, Pearl beads",
-      dimensions: "25cm Length",
-      origin: "Delhi Design Studio, India"
+      dimensions: "25cm Length"
+    }
+  },
+  {
+    id: 'peacock-lumba-rakhi',
+    title: "Parrot Gota Lumba Rakhi Set",
+    badge: "Lumba Collection",
+    price: "₹350.00",
+    image: "/images/peacock_lumba_rakhi.jpg",
+    description: "A gorgeous festive set featuring a hand-painted wooden peacock motif, golden Gota circles, and hanging white pearl/bead tassels.",
+    longDescription: "Celebrate Rakshabandhan with this premium handcrafted Lumba Rakhi set for brother and sister-in-law. It features a stunning Lumba Rakhi adorned with a hand-painted wooden peacock emblem, golden Gota Patti layered circles, and elegant hanging white bead and pearl tassels. It is paired with a matching wrist thread for the brother.",
+    category: "Heritage Fabrics",
+    amazonUrl: "https://www.amazon.com/s?k=peacock+lumba+rakhi+set",
+    details: {
+      materials: "Wooden peacock charm, Gota Patti ribbon, Pearl beads, Braided threads, Sequins",
+      dimensions: "Lumba: 18cm Length; Wrist Tie: 32cm Length"
     }
   }
 ];
@@ -290,8 +288,8 @@ const pageVariants = {
 
 const blockVariants = {
   hidden: { opacity: 0, y: 15 },
-  show: { 
-    opacity: 1, 
+  show: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }
   }
@@ -303,15 +301,15 @@ export default function App() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [soundVolume, setSoundVolume] = useState(0.4);
-  
+
   // Scroll indicators state
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   // Filters product list by selected category
   const categories = ["All", ...new Set(PRODUCTS.map(p => p.category))];
-  const filteredProducts = selectedCategory === "All" 
-    ? PRODUCTS 
+  const filteredProducts = selectedCategory === "All"
+    ? PRODUCTS
     : PRODUCTS.filter(p => p.category === selectedCategory);
 
   useEffect(() => {
@@ -336,7 +334,7 @@ export default function App() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       variants={pageVariants}
       initial="hidden"
       animate="show"
@@ -461,7 +459,7 @@ export default function App() {
       </motion.section>
 
       {/* Category Filter Bar */}
-      <motion.div 
+      <motion.div
         variants={blockVariants}
         className="relative z-10 flex flex-wrap justify-center gap-3.5 mb-8 px-4 font-sans mt-6"
       >
@@ -469,11 +467,10 @@ export default function App() {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded-full text-xs uppercase font-bold tracking-widest border transition-all duration-300 ${
-              selectedCategory === cat
-                ? 'bg-rosegold border-rosegold text-charcoal shadow-lg shadow-rosegold/10'
-                : 'bg-white/5 border-white/10 text-lightgray hover:text-cream hover:bg-white/10'
-            }`}
+            className={`px-4 py-2 rounded-full text-xs uppercase font-bold tracking-widest border transition-all duration-300 ${selectedCategory === cat
+              ? 'bg-rosegold border-rosegold text-charcoal shadow-lg shadow-rosegold/10'
+              : 'bg-white/5 border-white/10 text-lightgray hover:text-cream hover:bg-white/10'
+              }`}
           >
             {cat}
           </button>
@@ -481,21 +478,21 @@ export default function App() {
       </motion.div>
 
       {/* Main Feature: Card Stack */}
-      <motion.section 
+      <motion.section
         variants={blockVariants}
-        id="curations" 
+        id="curations"
         className="relative z-10 container mx-auto px-6 md:px-12 py-12 max-w-7xl flex flex-col items-center"
       >
         <div className="w-full flex justify-center">
-          <StackedCarousel 
-            products={filteredProducts} 
-            onActiveChange={setActiveProduct} 
+          <StackedCarousel
+            products={filteredProducts}
+            onActiveChange={setActiveProduct}
             onViewDetails={handleOpenDetails}
             soundEnabled={soundEnabled}
             soundVolume={soundVolume}
           />
         </div>
-        
+
         {/* Secondary Click Trigger (Fallback Detail button) */}
         <motion.button
           whileTap={{ scale: 0.97 }}
@@ -508,9 +505,9 @@ export default function App() {
       </motion.section>
 
       {/* Palace Heritage & Value Props Section */}
-      <motion.section 
+      <motion.section
         variants={blockVariants}
-        id="heritage" 
+        id="heritage"
         className="relative z-10 container mx-auto px-6 md:px-12 py-20 max-w-7xl border-t border-white/5"
       >
         <div className="text-center max-w-2xl mx-auto mb-16">
@@ -556,13 +553,13 @@ export default function App() {
       </motion.section>
 
       {/* Elegant, Comprehensive Footer with contact info & social links */}
-      <motion.footer 
+      <motion.footer
         variants={blockVariants}
         className="relative z-10 bg-black/60 border-t border-white/5 py-16 px-6 md:px-12 mt-12 text-xs md:text-sm font-sans"
       >
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-left mb-12">
-            
+
             {/* Column 1: Brand Story */}
             <div className="space-y-4">
               <h4 className="font-serif text-lg font-semibold tracking-wider text-cream">AMI CRAFT PALACE</h4>
@@ -577,7 +574,7 @@ export default function App() {
               <ul className="space-y-2 text-xs text-lightgray/70">
                 <li><a href="#curations" className="hover:text-cream transition-colors">Palace Curations</a></li>
                 <li><a href="#heritage" className="hover:text-cream transition-colors">Our Philosophy</a></li>
-                <li><a href="https://amazon.com" target="_blank" rel="noopener noreferrer" className="hover:text-cream transition-colors">Amazon Storefront</a></li>
+                <li><a href="https://www.amazon.in/storefront?me=A1PO2AXUX4A8XF&ref_=ssf_share" target="_blank" rel="noopener noreferrer" className="hover:text-cream transition-colors">Amazon Storefront</a></li>
               </ul>
             </div>
 
@@ -587,15 +584,15 @@ export default function App() {
               <ul className="space-y-2.5 text-xs text-lightgray/70">
                 <li className="flex items-center gap-2">
                   <MapPin className="w-3.5 h-3.5 text-sage" />
-                  <span>12 Palace Road, Jaipur, IN</span>
+                  <span>Space Residence, Mira Road, Thane, Maharashtra, IN</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="w-3.5 h-3.5 text-sage" />
-                  <span>+91 141 289 4802</span>
+                  <span>+91 8369830898</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="w-3.5 h-3.5 text-sage" />
-                  <span>info@amicraftpalace.com</span>
+                  <span>jangir.amita@gmail.com</span>
                 </li>
               </ul>
             </div>
@@ -604,20 +601,17 @@ export default function App() {
             <div className="space-y-4">
               <h5 className="text-[10px] uppercase font-bold tracking-widest text-rosegold">Connect With Us</h5>
               <div className="flex gap-4">
-                <a href="#" aria-label="Instagram Page" className="p-2.5 rounded-lg bg-white/5 text-lightgray hover:text-rosegold transition-colors">
+                <a href="https://www.instagram.com/amj_ideas" aria-label="Instagram Page" className="p-2.5 rounded-lg bg-white/5 text-lightgray hover:text-rosegold transition-colors">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                   </svg>
                 </a>
-                <a href="#" aria-label="Facebook Page" className="p-2.5 rounded-lg bg-white/5 text-lightgray hover:text-rosegold transition-colors">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                <a href="https://wa.me/message/CV3Z74LTJNYJK1" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Support" className="p-2.5 rounded-lg bg-white/5 text-lightgray hover:text-rosegold transition-colors">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M12.031 2c-5.516 0-9.984 4.469-9.984 9.984 0 1.766.453 3.484 1.328 5.016l-1.406 5.125 5.25-1.375c1.484.813 3.156 1.25 4.813 1.25 5.516 0 9.984-4.469 9.984-9.984 0-2.656-1.031-5.156-2.906-7.031-1.875-1.875-4.375-2.922-7.078-2.922zm0 1.516c2.25 0 4.359.875 5.953 2.469s2.469 3.703 2.469 5.953c0 4.656-3.797 8.453-8.453 8.453-1.484 0-2.938-.391-4.203-1.125l-.313-.188-3.125.813.828-3.031-.203-.328c-.813-1.297-1.25-2.813-1.25-4.375 0-4.656 3.797-8.453 8.453-8.453zm-3.625 3.328c-.141 0-.391.047-.594.266-.203.219-.781.766-.781 1.859s.797 2.156.906 2.313c.109.156 1.563 2.375 3.781 3.328.531.234.938.375 1.266.484.531.172 1.016.141 1.391.094.422-.063 1.297-.531 1.484-1.047.188-.516.188-.953.125-1.047-.063-.094-.219-.141-.469-.266-.25-.125-1.484-.734-1.719-.813-.234-.078-.406-.125-.578.125-.172.25-.672.828-.828 1-.156.172-.313.203-.563.078-.25-.125-1.063-.391-2.031-1.25-.75-.672-1.25-1.5-1.391-1.75-.141-.25-.016-.391.109-.516.109-.109.25-.297.375-.438.125-.141.172-.25.25-.422.078-.172.047-.328-.016-.453-.063-.125-.578-1.391-.797-1.922-.219-.516-.438-.453-.594-.453z" />
                   </svg>
-                </a>
-                <a href="#" aria-label="Live Chat Support" className="p-2.5 rounded-lg bg-white/5 text-lightgray hover:text-rosegold transition-colors">
-                  <MessageCircle className="w-4 h-4" />
                 </a>
               </div>
               <p className="text-[10px] text-lightgray/50">Follow our updates for new collection listings on Amazon.</p>
@@ -648,22 +642,22 @@ export default function App() {
               onClick={() => setIsDetailsOpen(false)}
               className="absolute inset-0 bg-black/75 backdrop-blur-md"
             />
-            
+
             {/* Modal Body: Left Slide on Desktop, Bottom Slide on Mobile */}
             <motion.div
               initial={
-                window.innerWidth < 768 
-                  ? { y: '100%', opacity: 1 } 
+                window.innerWidth < 768
+                  ? { y: '100%', opacity: 1 }
                   : { x: '-100%', opacity: 0 }
               }
               animate={
-                window.innerWidth < 768 
-                  ? { y: 0, opacity: 1 } 
+                window.innerWidth < 768
+                  ? { y: 0, opacity: 1 }
                   : { x: 0, opacity: 1 }
               }
               exit={
-                window.innerWidth < 768 
-                  ? { y: '100%', opacity: 1 } 
+                window.innerWidth < 768
+                  ? { y: '100%', opacity: 1 }
                   : { x: '-100%', opacity: 0 }
               }
               transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -671,9 +665,9 @@ export default function App() {
             >
               {/* Product Image Column */}
               <div className="w-full md:w-1/2 h-[40vh] md:h-full relative overflow-hidden bg-black/45">
-                <img 
-                  src={activeProduct.image} 
-                  alt={activeProduct.title} 
+                <img
+                  src={activeProduct.image}
+                  alt={activeProduct.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent md:hidden" />
@@ -681,8 +675,8 @@ export default function App() {
 
               {/* Specs & Details Column */}
               <div className="w-full md:w-1/2 h-[60vh] md:h-full">
-                <ProductDetails 
-                  product={activeProduct} 
+                <ProductDetails
+                  product={activeProduct}
                   onClose={() => setIsDetailsOpen(false)}
                 />
               </div>

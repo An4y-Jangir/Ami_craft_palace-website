@@ -74,10 +74,6 @@ export default function ProductDetails({ product, onClose }) {
                 <span className="w-1.5 h-1.5 rounded-full bg-warmgold" />
                 <strong className="text-cream/90 font-medium">Dimensions:</strong> {product.details.dimensions}
               </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-warmgold" />
-                <strong className="text-cream/90 font-medium">Origin:</strong> {product.details.origin}
-              </li>
             </ul>
           </div>
         </div>
