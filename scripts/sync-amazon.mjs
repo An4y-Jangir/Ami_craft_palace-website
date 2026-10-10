@@ -24,6 +24,13 @@ function slugify(text) {
     .replace(/\s+/g, '-');
 }
 
+// Automatically upgrade thumbnail Amazon image links to crystal-clear high-res
+function optimizeAmazonImageUrl(url) {
+  if (!url) return '/favicon.svg';
+  return url.replace(/\._AC_[^.]+\./, '._AC_SL1200_.');
+}
+
+
 // Load existing products
 function loadProducts() {
   if (fs.existsSync(PRODUCTS_SRC_PATH)) {
@@ -121,7 +128,7 @@ async function main() {
         price: priceVal ? `₹${priceVal.toFixed(2)}` : 'Check on Amazon',
         mrp: mrpVal ? `₹${mrpVal.toFixed(2)}` : undefined,
         discount,
-        image: productData.main_image?.link || productData.images?.[0]?.link || '/images/hero.png',
+        image: optimizeAmazonImageUrl(productData.main_image?.link || productData.images?.[0]?.link),
         description: productData.feature_bullets_flat || productData.title,
         longDescription: productData.description || productData.feature_bullets_flat || productData.title,
         category: 'Heritage Fabrics',
@@ -200,7 +207,7 @@ async function main() {
           discount,
           ratingScore: item.rating,
           ratingText: item.rating ? `${item.rating} (${item.ratings_total || 1} reviews)` : undefined,
-          image: item.image || '/images/hero.png',
+          image: optimizeAmazonImageUrl(item.image),
           description: item.title,
           longDescription: `Handcrafted creation from the AMI Craft Palace collection, available directly on our Amazon Storefront.`,
           category: 'Home Accents',
