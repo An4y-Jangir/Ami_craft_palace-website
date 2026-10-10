@@ -1,0 +1,43 @@
+name: Sync Amazon Storefront Listings
+
+on:
+  schedule:
+    # Run twice every day at 00:00 and 12:00 UTC
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+    # Allows manual trigger button in GitHub Actions tab anytime
+
+jobs:
+  sync-listings:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Amazon Storefront Sync
+        env:
+          RAINFOREST_API_KEY: ${{ secrets.RAINFOREST_API_KEY }}
+          AMAZON_SELLER_ID: ${{ secrets.AMAZON_SELLER_ID || 'A1PO2AXUX4A8XF' }}
+        run: |
+          node scripts/sync-amazon.mjs
+
+      - name: Commit and push changes if catalog updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/products.json public/data/products.json
+          if git diff --staged --quiet; then
+            echo "No new changes from Amazon storefront."
+          else
+            git commit -m "Auto-sync: update Amazon storefront listings [skip ci]"
+            git push
+            echo "Successfully synced new listings to repo!"
+          fi

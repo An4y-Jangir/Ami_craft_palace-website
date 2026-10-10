@@ -37,9 +37,18 @@ export default function ProductDetails({ product, onClose }) {
         <div className="flex items-center justify-between mb-4 mt-2">
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-3.5 h-3.5 fill-warmgold text-warmgold" />
+              <Star 
+                key={i} 
+                className={`w-3.5 h-3.5 ${
+                  product.ratingScore 
+                    ? (i < Math.floor(product.ratingScore) ? 'fill-warmgold text-warmgold' : 'text-warmgold/30')
+                    : 'fill-warmgold text-warmgold'
+                }`} 
+              />
             ))}
-            <span className="text-xs text-lightgray ml-2 font-sans">(48 reviews)</span>
+            <span className="text-xs text-lightgray ml-2 font-sans">
+              {product.ratingText || "(48 reviews)"}
+            </span>
           </div>
           <span className="text-xs font-semibold tracking-wider text-sage uppercase font-sans">
             Available on Amazon
@@ -50,10 +59,20 @@ export default function ProductDetails({ product, onClose }) {
         <h2 className="font-serif text-3xl md:text-4xl font-bold text-cream tracking-wide mb-2 leading-tight">
           {product.title}
         </h2>
-        <div className="flex items-baseline gap-4 mb-6">
+        <div className="flex flex-wrap items-baseline gap-3 mb-6">
           <span className="font-serif text-2xl md:text-3xl text-gold-gradient font-semibold">
             {product.price}
           </span>
+          {product.mrp && (
+            <span className="text-sm text-lightgray/60 line-through font-sans">
+              M.R.P.: {product.mrp}
+            </span>
+          )}
+          {product.discount && (
+            <span className="text-xs font-bold text-rose-300 bg-rose-500/15 border border-rose-500/25 px-2 py-0.5 rounded-full font-sans">
+              {product.discount}
+            </span>
+          )}
         </div>
 
         {/* Product Details Description & Specifications */}

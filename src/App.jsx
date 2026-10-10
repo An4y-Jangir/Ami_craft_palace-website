@@ -8,271 +8,13 @@ import {
   Shield,
   Heart,
   Eye,
-  Volume2,
-  VolumeX,
   Mail,
   Phone,
   MapPin
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const PRODUCTS = [
-  {
-    id: 'shubh-labh-hangings',
-    title: "Shubh Labh Embroidered Hangings",
-    badge: "Festive Collection",
-    price: "₹500.00",
-    image: "/images/shubh_labh_hangings.webp",
-    description: "Traditional door hangings featuring Shubh Labh text plates, floral motifs, and pearl strings.",
-    longDescription: "An auspicious set of two hanging door decorations featuring beautifully crafted 'Shubh' and 'Labh' plaques (representing auspiciousness and prosperity). Ornamented with soft white organza flower clusters, golden Gota Patti work, and layered faux pearl strands.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://amzn.in/d/0dSXpQzF",
-    details: {
-      materials: "Cardboard, Fabric, Metallic Foil, Net, Pearl Beads, Resin, Sequins",
-      dimensions: "2D x 8.5W x 25.5H Centimeters"
-    }
-  },
-  {
-    id: 'peacock-sticks',
-    title: "Peacock Motif Decor Sticks",
-    badge: "Heritage Accents",
-    price: "₹199.00",
-    image: "/images/peacock_sticks.webp",
-    description: "Delicate decorative sticks adorned with hand-styled peacock feathers and gold details.",
-    longDescription: "A pair of traditional decorative sticks designed with delicate miniature peacock feather eyes. Wrapped in golden threads and finished with vibrant orange felt backings, these sticks add an authentic, regal charm to vases or festive centerpieces.",
-    category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=traditional+indian+decor+sticks",
-    details: {
-      materials: "Gota thread, Felt, Peacock feathers, Rhinestones",
-      dimensions: "25cm Height x 8cm Diameter"
-    }
-  },
-  {
-    id: 'evil-eye-patch',
-    title: "Evil Eye Beaded Patch",
-    badge: "Protection Charm",
-    price: "₹200.00",
-    image: "/images/evil_eye_patch.webp",
-    description: "Handmade blue and gold beaded evil eye wall emblem with sequin embroidery.",
-    longDescription: "An intricately detailed evil eye protection amulet, hand-stitched with micro glass beads in royal blue, turquoise, and cream. Embellished with shimmering gold sequins and decorative leaf elements to protect your home with luxury styling.",
-    category: "Home Accents",
-    amazonUrl: "https://amzn.in/d/0a7cx1c7",
-    details: {
-      materials: "Fabric Backing, Glass Beads, Metallic Thread, Sequins",
-      dimensions: "11.0L x 8.0W Centimeters"
-    }
-  },
-  {
-    id: 'evil-eye-toran',
-    title: "Radha Krishna Door Bandhanwar",
-    badge: "Royal Toran",
-    price: "₹1800.00",
-    image: "/images/evil_eye_toran.webp",
-    description: "Premium door hanging featuring beaded evil eye borders, flowers, and a Radha Krishna centerpiece.",
-    longDescription: "A premium, horizontal door hanging (Bandhanwar/Toran) featuring protective beaded evil eye medallions at both ends. Decorated with an array of pastel organza flowers, sequence borders, and a beautiful central Radha Krishna medallion. Fits standard doors.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=indian+door+hanging+toran+bandhanwar",
-    details: {
-      materials: "Organza flowers, Glass beads, Sequence lace, Metal medallion",
-      dimensions: "90cm Length (fits standard door frames)"
-    }
-  },
-  {
-    id: 'brocade-thali',
-    title: "Brocade Decorative Puja Platter",
-    badge: "Festive Dining",
-    price: "₹399.00",
-    image: "/images/brocade_thali.webp",
-    description: "An elegant green brocade thali set with gold border trim, matching brass cups, and a cone.",
-    longDescription: "A festive decorative platter (Thali) wrapped in luxurious dark green forest brocade with floral gold weave patterns. Styled with gold triangle Gota laces and matching pearl boundaries. Includes two small metal bowls and a Gota-wrapped cone.",
-    category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=decorated+brocade+puja+thali+plate",
-    details: {
-      materials: "Forest Green Brocade fabric, Gota laces, Brass, Faux pearls",
-      dimensions: "28cm Diameter"
-    }
-  },
-  {
-    id: 'ganesha-toran',
-    title: "Ganesha Medallion Door Toran",
-    badge: "Royal Toran",
-    price: "₹2100.00",
-    image: "/images/ganesha_toran.webp",
-    description: "Deluxe door hanging featuring a central Ganesha medallion, light purple roses, and beaded embellishments.",
-    longDescription: "A magnificent horizontal door toran featuring a diamond-shaped Ganesha icon at the center. Accented with lush lavender roses, gold sequence borders, hanging metallic bells, and elegant mint-blue lotus corner patches.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://amzn.in/d/07URixoK",
-    details: {
-      materials: "Artificial Flowers, Beads, Embroidery Thread, Fabric, Metal, Sequins",
-      dimensions: "104 Length Centimetres"
-    }
-  },
-  {
-    id: 'swastik-lotus-hangings',
-    title: "Lotus Swastik Wall Hangings",
-    badge: "Protection Charm",
-    price: "₹350.00",
-    image: "/images/swastik_lotus_hangings.webp",
-    description: "A pair of swastik protection symbols decorated with pink lotus illustrations and golden tassels.",
-    longDescription: "An elegant pair of hanging Swastik medallions decorated with golden borders, pink lotus graphics, and soft silk tassels. Symbolizing protection and positivity, they look gorgeous hanging in entryways or temple rooms.",
-    category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=indian+swastik+hanging+lotus",
-    details: {
-      materials: "MDF base, Silk tassels, Gota borders, Rhinestones",
-      dimensions: "50cm Length x 10cm Width"
-    }
-  },
-  {
-    id: 'rose-shubh-labh',
-    title: "Shubh Labh Rose Plaques",
-    badge: "Festive Collection",
-    price: "₹450.00",
-    image: "/images/rose_shubh_labh.webp",
-    description: "A set of Shubh Labh plaques adorned with large purple roses, gold rings, and hanging jhumkas.",
-    longDescription: "A modern design of Shubh Labh hanging plaques featuring large, realistic light purple organza roses on gold tissue frames. Finished with traditional sequin-covered jhumka bells at the bottom.",
-    category: "Home Accents",
-    amazonUrl: "https://amzn.in/d/0gsdsxzI",
-    details: {
-      materials: "Delicate Pearl Beadwork, Soft Pink Fabric Flowers, and Golden Sequinned Jhumki Bells",
-      dimensions: "2D x 8.5W x 25.5H Centimeters"
-    }
-  },
-  {
-    id: 'burlap-gift-pouch',
-    title: "Gemstone Burlap Gift Pouch",
-    badge: "Heritage Accents",
-    price: "₹650.00",
-    image: "/images/burlap_gift_pouch.webp",
-    description: "Handmade rustic burlap bag featuring a central teardrop gemstone and pearl border.",
-    longDescription: "A charming and rustic favor pouch crafted from natural jute burlap. Decorated with a central teardrop rhinestone framed by micro-pearl borders. Includes a gold drawstring closure, perfect for luxury gifting.",
-    category: "Home Accents",
-    amazonUrl: "https://amzn.in/d/00FElpaE",
-    details: {
-      materials: "Cotton Drawstring, Jute, Pearl Beads, Rhinestone",
-      dimensions: "13L x 11W x 0.5H Centimeters"
-    }
-  },
-  {
-    id: 'krishna-pearl-frame',
-    title: "Krishna Pearl Framed Icon",
-    badge: "Heritage Accents",
-    price: "₹250.00",
-    image: "/images/krishna_pearl_frame.webp",
-    description: "Gilded square desktop icon featuring a hand-painted Krishna face with double pearl borders.",
-    longDescription: "A beautiful square decorative frame layered with dual rows of premium white faux pearls and set with circular rhinestones. Houses a hand-painted traditional portrait of Lord Krishna with a peacock feather crown.",
-    category: "Home Accents",
-    amazonUrl: "https://amzn.in/d/0hwvSjaY",
-    details: {
-      materials: "Wood, Metal with Pearl and Crystal Embilleshment, Golden Finish Frame",
-      dimensions: "8.5L x 8.8W Centimeters"
-    }
-  },
-  {
-    id: 'gift-box-ribbon',
-    title: "Rose Ribbon Gift Box Decoration",
-    badge: "Home Accents",
-    price: "₹150.00",
-    image: "/images/gift_box_ribbon.webp",
-    description: "Clear gift container wrapped with a broad gold mesh ribbon and a realistic pink rose centerpiece.",
-    longDescription: "An elegant gift presentation solution. Features a premium clear container wrapped in structured gold mesh ribbon, centered with a lifelike deep pink rose detail. Makes any gift look exceptionally premium.",
-    category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=gold+mesh+ribbon+gift+box+decoration",
-    details: {
-      materials: "Polypropylene, Gold mesh ribbon, Silk rose",
-      dimensions: "22cm x 15cm x 10cm"
-    }
-  },
-  {
-    id: 'ganesha-gold-thali',
-    title: "Ganesha Gold Decorative Platter",
-    badge: "Home Accents",
-    price: "₹299.00",
-    image: "/images/ganesha_gold_thali.webp",
-    description: "Golden net-texture thali with white pearl borders, a central Ganesha detail, and matching bowls.",
-    longDescription: "A stunning golden platter wrapped in a fine mesh texture, finished with a classic border of faux white pearls. Includes a central Ganesha emblem, two small bowls for ritual ingredients, and white floral details.",
-    category: "Home Accents",
-    amazonUrl: "https://www.amazon.com/s?k=ganesha+gold+puja+thali+plate",
-    details: {
-      materials: "Steel platter, Gold mesh, Faux pearls, Brass bowls",
-      dimensions: "26cm Diameter"
-    }
-  },
-  {
-    id: 'shimmer-platter-cover',
-    title: "Shimmering Organza Platter Cover",
-    badge: "Heritage Fabrics",
-    price: "₹500.00",
-    image: "/images/shimmer_platter_cover.webp",
-    description: "Light blue shimmering organza cloth with gold fringes, perfect for wrapping presentation trays.",
-    longDescription: "A luxurious light blue organza cover cloth with gold-threaded borders and fine metallic fringes. Perfect for covering shagun platters or offering gifts in a traditional, elegant manner.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://amzn.in/d/0gIK4LIA",
-    details: {
-      materials: "Organza fabric, Golden Zari thread",
-      dimensions: "48L x 48W Centimeters"
-    }
-  },
-  {
-    id: 'flower-lumba-rakhi',
-    title: "Aura Rose Flower Lumba Rakhi",
-    badge: "Lumba Collection",
-    price: "₹350.00",
-    image: "/images/flower_lumba_rakhi.webp",
-    description: "An exquisite pink rose flower Lumba Rakhi with golden beads, micro-pearl details, and matching pom-poms.",
-    longDescription: "A beautifully styled handcrafted Lumba Rakhi designed specifically for sisters-in-law. Adorned with a large, delicate pink fabric rose, micro-pearl accents, hanging pom-poms with criss-cross golden ribbons, and a matching peacock motif thread.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=lumba+rakhi+for+bhabhi",
-    details: {
-      materials: "Organza flower, Golden beads, Pom-poms, Satin ribbons, Peacock motif charm",
-      dimensions: "32cm Total Length"
-    }
-  },
-  {
-    id: 'gota-tassel-rakhi',
-    title: "Exquisite Pearl & Crystal Gota Tassel Set",
-    badge: "Artisan Set",
-    price: "₹550.00",
-    image: "/images/gota_tassel_rakhi.webp",
-    description: "Exquisite handcrafted set featuring a gold flower thread and a stunning sequined bell tassel hanging.",
-    longDescription: "A premium handcrafted artisan set of two: a delicate wrist tie adorned with a crystal flower centerpiece, paired with a matching hanging tassel ornament. Crafted with shimmering gold Gota, sequins, and multiple hanging strands of tiny gold beads and white pearls.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=gota+tassel+rakhi+set",
-    details: {
-      materials: "Gota Patti ribbon, Sequins, Glass crystal beads, Faux pearls",
-      dimensions: "Tassel: 15cm Length; Wrist Tie: 35cm Length"
-    }
-  },
-  {
-    id: 'heart-pendant-rakhi',
-    title: "Enameled Heart Pendant Rakhi",
-    badge: "Modern Festive",
-    price: "₹150.00",
-    image: "/images/heart_pendant_rakhi.webp",
-    description: "A modern design featuring a pink-enameled layered heart pendant on a gold link chain and pink thread.",
-    longDescription: "A contemporary fusion design. Features a beautiful, high-gloss enameled heart pendant with concentric pink, white, and red layers, suspended from a gold-plated link chain. Finished with soft pink braided threads and small pearl accent beads, combining modern charm with festive tradition.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=heart+pendant+rakhi+bracelet",
-    details: {
-      materials: "Enameled brass pendant, Gold-plated chain, Cotton threads, Pearl beads",
-      dimensions: "25cm Length"
-    }
-  },
-  {
-    id: 'peacock-lumba-rakhi',
-    title: "Parrot Gota Lumba Rakhi Set",
-    badge: "Lumba Collection",
-    price: "₹350.00",
-    image: "/images/peacock_lumba_rakhi.jpg",
-    description: "A gorgeous festive set featuring a hand-painted wooden peacock motif, golden Gota circles, and hanging white pearl/bead tassels.",
-    longDescription: "Celebrate Rakshabandhan with this premium handcrafted Lumba Rakhi set for brother and sister-in-law. It features a stunning Lumba Rakhi adorned with a hand-painted wooden peacock emblem, golden Gota Patti layered circles, and elegant hanging white bead and pearl tassels. It is paired with a matching wrist thread for the brother.",
-    category: "Heritage Fabrics",
-    amazonUrl: "https://www.amazon.com/s?k=peacock+lumba+rakhi+set",
-    details: {
-      materials: "Wooden peacock charm, Gota Patti ribbon, Pearl beads, Braided threads, Sequins",
-      dimensions: "Lumba: 18cm Length; Wrist Tie: 32cm Length"
-    }
-  }
-];
+import initialProducts from './data/products.json';
 
 // Sequential Fade-In Loading Animation Variants
 const pageVariants = {
@@ -296,21 +38,36 @@ const blockVariants = {
 };
 
 export default function App() {
-  const [activeProduct, setActiveProduct] = useState(PRODUCTS[0]);
+  const [products, setProducts] = useState(initialProducts);
+  const [activeProduct, setActiveProduct] = useState(initialProducts[0] || null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [soundVolume, setSoundVolume] = useState(0.4);
 
   // Scroll indicators state
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
 
+  // Auto-refresh product list dynamically if new listings sync into /data/products.json
+  useEffect(() => {
+    fetch('/data/products.json?t=' + Date.now())
+      .then(res => {
+        if (res.ok) return res.json();
+        throw new Error('Not available');
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+          setActiveProduct(prev => (prev ? data.find(p => p.id === prev.id) || data[0] : data[0]));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Filters product list by selected category
-  const categories = ["All", ...new Set(PRODUCTS.map(p => p.category))];
+  const categories = ["All", ...new Set(products.map(p => p.category))];
   const filteredProducts = selectedCategory === "All"
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+    ? products
+    : products.filter(p => p.category === selectedCategory);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -399,36 +156,7 @@ export default function App() {
           <a href="#heritage" className="hover:text-rosegold transition-colors">Our Philosophy</a>
         </nav>
 
-        {/* Sound Controls */}
-        <div className="flex items-center gap-4">
-          {/* Sound volume controller */}
-          <div className="flex items-center gap-2.5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-full px-3 py-1.5 transition-all duration-300 font-sans group">
-            <button
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className="focus:outline-none text-lightgray hover:text-rosegold transition-colors"
-              aria-label={soundEnabled ? "Mute interface audio feedback" : "Unmute interface audio feedback"}
-            >
-              {soundEnabled ? (
-                <Volume2 className="w-4 h-4 text-warmgold" />
-              ) : (
-                <VolumeX className="w-4 h-4 text-lightgray/55" />
-              )}
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.05"
-              value={soundEnabled ? soundVolume : 0}
-              onChange={(e) => {
-                setSoundEnabled(true);
-                setSoundVolume(parseFloat(e.target.value));
-              }}
-              className="w-14 md:w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-rosegold focus:outline-none"
-              aria-label="Adjust card click volume levels"
-            />
-          </div>
-        </div>
+
       </header>
 
       {/* Hero Section with loading animations */}
@@ -488,8 +216,6 @@ export default function App() {
             products={filteredProducts}
             onActiveChange={setActiveProduct}
             onViewDetails={handleOpenDetails}
-            soundEnabled={soundEnabled}
-            soundVolume={soundVolume}
           />
         </div>
 

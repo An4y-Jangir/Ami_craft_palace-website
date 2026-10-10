@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { RotateCw, Sparkles } from 'lucide-react';
 
-export default function StackedCarousel({ products, onActiveChange, onViewDetails, soundEnabled = true, soundVolume = 0.5 }) {
+export default function StackedCarousel({ products, onActiveChange, onViewDetails }) {
   // Order of card indices. Top card is the first element in this array.
   const [order, setOrder] = useState(products.map((_, i) => i));
   const [isAnimating, setIsAnimating] = useState(false);
@@ -11,12 +11,6 @@ export default function StackedCarousel({ products, onActiveChange, onViewDetail
   const [cursorClass, setCursorClass] = useState('cursor-pointer');
   const [isMobile, setIsMobile] = useState(false);
   const shouldReduceMotion = useReducedMotion();
-  const audioRef = useRef(null);
-
-  // Initialize audio file
-  useEffect(() => {
-    audioRef.current = new Audio('/sounds/click.mp3');
-  }, []);
 
   // Track screen size for dynamic mobile stacking gaps
   useEffect(() => {
@@ -28,9 +22,14 @@ export default function StackedCarousel({ products, onActiveChange, onViewDetail
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Reset order when products list changes
+  useEffect(() => {
+    setOrder(products.map((_, i) => i));
+  }, [products]);
+
   // Notify parent component about the current active (top) card
   useEffect(() => {
-    if (onActiveChange) {
+    if (onActiveChange && products[order[0]]) {
       onActiveChange(products[order[0]]);
     }
   }, [order, products, onActiveChange]);
@@ -54,13 +53,6 @@ export default function StackedCarousel({ products, onActiveChange, onViewDetail
   const rotateNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    
-    // Play rotation audio
-    if (soundEnabled && audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = soundVolume;
-      audioRef.current.play().catch(() => {});
-    }
 
     // Animate transition
     setLastClickedIndex(order[0]);
@@ -81,13 +73,6 @@ export default function StackedCarousel({ products, onActiveChange, onViewDetail
   const rotatePrev = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-
-    // Play rotation audio
-    if (soundEnabled && audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = soundVolume;
-      audioRef.current.play().catch(() => {});
-    }
 
     const prevIndex = order[order.length - 1];
     setLastEnteringIndex(prevIndex);
@@ -306,9 +291,21 @@ export default function StackedCarousel({ products, onActiveChange, onViewDetail
                   {product.description}
                 </p>
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="font-serif text-lg text-warmgold font-medium">
-                    {product.price}
-                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-serif text-lg text-warmgold font-medium">
+                      {product.price}
+                    </span>
+                    {product.mrp && (
+                      <span className="text-[11px] text-lightgray/50 line-through">
+                        {product.mrp}
+                      </span>
+                    )}
+                    {product.discount && (
+                      <span className="text-[9px] font-bold text-rose-300 bg-rose-500/15 border border-rose-500/20 px-1.5 py-0.5 rounded-full">
+                        {product.discount}
+                      </span>
+                    )}
+                  </div>
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
