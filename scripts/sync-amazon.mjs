@@ -49,18 +49,51 @@ function saveProducts(products) {
   console.log(`Saved ${products.length} products to products.json`);
 }
 
-// Fetch storefront listings using Rainforest API (Free tier: 100 requests/month)
+// Fetch storefront listings using Rainforest API (Supports multi-page storefront pagination)
 async function fetchStorefrontListings(apiKey, sellerId) {
-  const url = `https://api.rainforestapi.com/request?api_key=${apiKey}&type=seller_products&seller_id=${sellerId}&amazon_domain=${AMAZON_DOMAIN}`;
-  console.log(`Querying Rainforest API for seller ${sellerId} on ${AMAZON_DOMAIN}...`);
+  let allItems = [];
+  let currentPage = 1;
+  let totalPages = 1;
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Rainforest API error: ${response.status} ${response.statusText}`);
+  while (currentPage <= totalPages) {
+    const url = `https://api.rainforestapi.com/request?api_key=${apiKey}&type=seller_products&seller_id=${sellerId}&amazon_domain=${AMAZON_DOMAIN}&page=${currentPage}`;
+    console.log(`Querying Rainforest API for seller ${sellerId} on ${AMAZON_DOMAIN} (page ${currentPage} of ${totalPages || '?'})...`);
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.warn(`Rainforest API warning on page ${currentPage}: ${response.status} ${response.statusText}`);
+        break;
+      }
+
+      const data = await response.json();
+      const items = data.seller_products || [];
+      console.log(`Page ${currentPage}: retrieved ${items.length} products.`);
+
+      if (items.length === 0) {
+        break;
+      }
+
+      allItems = allItems.concat(items);
+
+      if (data.pagination?.total_pages) {
+        totalPages = data.pagination.total_pages;
+      } else {
+        break;
+      }
+
+      currentPage++;
+      if (currentPage <= totalPages) {
+        // Small delay between page requests to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 800));
+      }
+    } catch (err) {
+      console.warn(`Error on page ${currentPage}: ${err.message}`);
+      break;
+    }
   }
 
-  const data = await response.json();
-  return data.seller_products || [];
+  return allItems;
 }
 
 // Fetch a single ASIN product details (via Rainforest API or direct)
@@ -166,7 +199,7 @@ async function main() {
     console.log('1. Get a free API key at: https://rainforestapi.com (100 free requests/month)');
     console.log('2. Add it to your environment or GitHub Secrets: RAINFOREST_API_KEY=your_key');
     console.log('3. Run `npm run sync` or let the automated GitHub Action run on schedule.\n');
-    console.log('Existing catalog has 23 products and is running normally.');
+    console.log(`Existing catalog has ${existingProducts.length} products and is running normally.`);
     return;
   }
 
