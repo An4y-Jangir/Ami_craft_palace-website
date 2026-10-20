@@ -24,12 +24,41 @@ function slugify(text) {
     .replace(/\s+/g, '-');
 }
 
+// Extract clean 10-character Amazon ASIN from any URL or string
+function extractAsin(url) {
+  if (!url) return null;
+  const match = url.match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})/i);
+  return match ? match[1].toUpperCase() : null;
+}
+
+// Normalize title for resilient deduplication comparison
+function normalizeTitle(text) {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .replace(/\b(ami\s+craft\s+palace|generic|pack\s+of\s+\d+|set\s+of\s+\d+)\b/gi, '')
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Automatically categorize products based on craftsmanship keywords
+function determineCategory(title, description) {
+  const combined = `${title || ''} ${description || ''}`.toLowerCase();
+  const heritageKeywords = [
+    'rakhi', 'lumba', 'lace', 'trim', 'patch', 'patches', 'tassel', 'tassels',
+    'yarn', 'fabric', 'cord', 'rope', 'embroidery patch', 'gotta', 'zardozi'
+  ];
+  return heritageKeywords.some(kw => combined.includes(kw))
+    ? 'Heritage Fabrics'
+    : 'Home Accents';
+}
+
 // Automatically upgrade thumbnail Amazon image links to crystal-clear high-res
 function optimizeAmazonImageUrl(url) {
   if (!url) return '/favicon.svg';
   return url.replace(/\._AC_[^.]+\./, '._AC_SL1200_.');
 }
-
 
 // Load existing products
 function loadProducts() {
@@ -39,14 +68,54 @@ function loadProducts() {
   return [];
 }
 
-// Save products to both src and public
+// Deduplicate product catalog by ASIN, Title, Image, and Slug ID
+function deduplicateProducts(products) {
+  const seenAsins = new Set();
+  const seenImages = new Set();
+  const seenIds = new Set();
+  const seenTitles = new Set();
+
+  return products.filter(p => {
+    if (!p || !p.title) return false;
+
+    const asin = extractAsin(p.amazonUrl);
+    const normTitle = normalizeTitle(p.title);
+    const cleanId = p.id || slugify(p.title);
+
+    // Prevent duplicate IDs
+    if (cleanId && seenIds.has(cleanId)) return false;
+
+    // Prevent duplicate ASINs
+    if (asin && seenAsins.has(asin)) return false;
+
+    // Prevent duplicate normalized titles
+    if (normTitle && seenTitles.has(normTitle)) return false;
+
+    // Prevent duplicate images (ignore local assets or fallback favicons)
+    if (p.image && !p.image.startsWith('/images/') && p.image !== '/favicon.svg' && seenImages.has(p.image)) {
+      return false;
+    }
+
+    if (cleanId) seenIds.add(cleanId);
+    if (asin) seenAsins.add(asin);
+    if (normTitle) seenTitles.add(normTitle);
+    if (p.image && !p.image.startsWith('/images/') && p.image !== '/favicon.svg') {
+      seenImages.add(p.image);
+    }
+
+    return true;
+  });
+}
+
+// Save products to both src and public with guaranteed deduplication
 function saveProducts(products) {
-  const jsonStr = JSON.stringify(products, null, 2);
+  const cleanList = deduplicateProducts(products);
+  const jsonStr = JSON.stringify(cleanList, null, 2);
   fs.mkdirSync(path.dirname(PRODUCTS_SRC_PATH), { recursive: true });
   fs.mkdirSync(path.dirname(PRODUCTS_PUB_PATH), { recursive: true });
   fs.writeFileSync(PRODUCTS_SRC_PATH, jsonStr, 'utf-8');
   fs.writeFileSync(PRODUCTS_PUB_PATH, jsonStr, 'utf-8');
-  console.log(`Saved ${products.length} products to products.json`);
+  console.log(`Saved ${cleanList.length} unique, deduplicated products to products.json`);
 }
 
 // Fetch storefront listings using Rainforest API (Supports multi-page storefront pagination)
@@ -147,13 +216,12 @@ async function main() {
         return;
       }
 
-      const id = slugify(productData.title || targetAsin);
-      const existingIdx = existingProducts.findIndex(p => p.id === id || (p.amazonUrl && p.amazonUrl.includes(targetAsin)));
-
       const priceVal = productData.buybox_winner?.price?.value || productData.prices?.[0]?.value;
       const mrpVal = productData.buybox_winner?.rrp?.value || productData.rrp?.value;
       const discount = mrpVal && priceVal ? `${Math.round((1 - priceVal / mrpVal) * 100)}% off` : undefined;
 
+      const category = determineCategory(productData.title, productData.description || productData.feature_bullets_flat);
+      const id = slugify(productData.title || targetAsin);
       const newProduct = {
         id,
         title: productData.title,
@@ -164,7 +232,7 @@ async function main() {
         image: optimizeAmazonImageUrl(productData.main_image?.link || productData.images?.[0]?.link),
         description: productData.feature_bullets_flat || productData.title,
         longDescription: productData.description || productData.feature_bullets_flat || productData.title,
-        category: 'Heritage Fabrics',
+        category,
         amazonUrl: productData.link || `https://www.amazon.in/dp/${targetAsin}`,
         details: {
           materials: productData.specifications_flat || 'Artisanal Handcrafted Materials',
@@ -172,12 +240,20 @@ async function main() {
         }
       };
 
+      const existingIdx = existingProducts.findIndex(p => {
+        const pAsin = extractAsin(p.amazonUrl);
+        return (targetAsin && pAsin && targetAsin === pAsin) ||
+               (p.id === id) ||
+               (normalizeTitle(p.title) === normalizeTitle(newProduct.title)) ||
+               (newProduct.image && p.image === newProduct.image);
+      });
+
       if (existingIdx !== -1) {
         existingProducts[existingIdx] = { ...existingProducts[existingIdx], ...newProduct };
         console.log(`Updated existing product: "${newProduct.title}"`);
       } else {
-        existingProducts.unshift(newProduct);
-        console.log(`Added new product to top of listing: "${newProduct.title}"`);
+        existingProducts.push(newProduct);
+        console.log(`Added new product to catalog: "${newProduct.title}"`);
       }
 
       saveProducts(existingProducts);
@@ -199,7 +275,7 @@ async function main() {
     console.log('1. Get a free API key at: https://rainforestapi.com (100 free requests/month)');
     console.log('2. Add it to your environment or GitHub Secrets: RAINFOREST_API_KEY=your_key');
     console.log('3. Run `npm run sync` or let the automated GitHub Action run on schedule.\n');
-    console.log(`Existing catalog has ${existingProducts.length} products and is running normally.`);
+    console.log(`Existing catalog has ${existingProducts.length} unique products and is running normally.`);
     return;
   }
 
@@ -213,10 +289,20 @@ async function main() {
     for (const item of rawItems) {
       if (!item.title || !item.asin) continue;
 
-      const asin = item.asin;
-      const existingIdx = existingProducts.findIndex(p => 
-        (p.amazonUrl && p.amazonUrl.includes(asin)) || p.title.toLowerCase().trim() === item.title.toLowerCase().trim()
-      );
+      const asin = item.asin.toUpperCase();
+      const itemTitleNorm = normalizeTitle(item.title);
+      const itemImage = optimizeAmazonImageUrl(item.image);
+      const category = determineCategory(item.title, item.description || '');
+
+      const existingIdx = existingProducts.findIndex(p => {
+        const pAsin = extractAsin(p.amazonUrl);
+        if (asin && pAsin && asin === pAsin) return true;
+        if (p.amazonUrl && asin && p.amazonUrl.includes(asin)) return true;
+        if (p.id === slugify(item.title)) return true;
+        if (itemTitleNorm && normalizeTitle(p.title) === itemTitleNorm) return true;
+        if (itemImage && p.image && itemImage !== '/favicon.svg' && !p.image.startsWith('/images/') && p.image === itemImage) return true;
+        return false;
+      });
 
       const priceVal = item.price?.value;
       const mrpVal = item.rrp?.value;
@@ -228,9 +314,12 @@ async function main() {
         if (mrpVal) existingProducts[existingIdx].mrp = `₹${mrpVal.toFixed(2)}`;
         if (discount) existingProducts[existingIdx].discount = discount;
         if (item.rating) existingProducts[existingIdx].ratingScore = item.rating;
+        if (existingProducts[existingIdx].category === 'Home Accents' && category !== 'Home Accents') {
+          existingProducts[existingIdx].category = category;
+        }
         updatedCount++;
       } else {
-        // Add new product
+        // Add new unique product
         const newProduct = {
           id: slugify(item.title),
           title: item.title,
@@ -240,19 +329,20 @@ async function main() {
           discount,
           ratingScore: item.rating,
           ratingText: item.rating ? `${item.rating} (${item.ratings_total || 1} reviews)` : undefined,
-          image: optimizeAmazonImageUrl(item.image),
+          image: itemImage,
           description: item.title,
           longDescription: `Handcrafted creation from the AMI Craft Palace collection, available directly on our Amazon Storefront.`,
-          category: 'Home Accents',
+          category,
           amazonUrl: item.link || `https://www.amazon.in/dp/${asin}?m=${SELLER_ID}`,
           details: {
             materials: 'Artisanal Handcrafted Materials',
             dimensions: 'Standard'
           }
         };
-        existingProducts.unshift(newProduct);
+
+        existingProducts.push(newProduct);
         addedCount++;
-        console.log(`+ Discovered new storefront listing: "${item.title}" (${asin})`);
+        console.log(`+ Discovered new unique storefront listing: "${item.title}" (${asin})`);
       }
     }
 

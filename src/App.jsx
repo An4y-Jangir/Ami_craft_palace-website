@@ -46,9 +46,46 @@ const blockVariants = {
   }
 };
 
+// Clean and deduplicate products list so no reoccurring items can ever be rendered
+function deduplicateProducts(rawList) {
+  if (!Array.isArray(rawList)) return [];
+  const seenIds = new Set();
+  const seenAsins = new Set();
+  const seenImages = new Set();
+  const seenTitles = new Set();
+
+  return rawList.filter(item => {
+    if (!item || !item.id || !item.title) return false;
+
+    const asinMatch = item.amazonUrl?.match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})/i);
+    const asin = asinMatch ? asinMatch[1].toUpperCase() : null;
+    const normTitle = item.title.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+
+    // Prevent duplicate IDs, ASINs, Titles, and Image URLs
+    if (seenIds.has(item.id)) return false;
+    if (asin && seenAsins.has(asin)) return false;
+    if (normTitle && seenTitles.has(normTitle)) return false;
+    if (item.image && !item.image.startsWith('/images/') && item.image !== '/favicon.svg' && seenImages.has(item.image)) {
+      return false;
+    }
+
+    seenIds.add(item.id);
+    if (asin) seenAsins.add(asin);
+    if (normTitle) seenTitles.add(normTitle);
+    if (item.image && !item.image.startsWith('/images/') && item.image !== '/favicon.svg') {
+      seenImages.add(item.image);
+    }
+
+    return true;
+  });
+}
+
 export default function App() {
-  const [products, setProducts] = useState(initialProducts);
-  const [activeProduct, setActiveProduct] = useState(initialProducts[0] || null);
+  const [products, setProducts] = useState(() => deduplicateProducts(initialProducts));
+  const [activeProduct, setActiveProduct] = useState(() => {
+    const list = deduplicateProducts(initialProducts);
+    return list[0] || null;
+  });
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [viewMode, setViewMode] = useState("deck"); // 'deck' or 'grid'
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -67,8 +104,9 @@ export default function App() {
       })
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
-          setActiveProduct(prev => (prev ? data.find(p => p.id === prev.id) || data[0] : data[0]));
+          const clean = deduplicateProducts(data);
+          setProducts(clean);
+          setActiveProduct(prev => (prev ? clean.find(p => p.id === prev.id) || clean[0] : clean[0]));
         }
       })
       .catch(() => {});
